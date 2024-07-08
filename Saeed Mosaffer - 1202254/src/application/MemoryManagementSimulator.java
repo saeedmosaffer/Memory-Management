@@ -8,7 +8,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +39,9 @@ public class MemoryManagementSimulator extends Application {
 
         HBox hbox = new HBox(15);
         memoryView = new VBox(10);
+        ScrollPane scrollPane = new ScrollPane(memoryView);
+        scrollPane.setFitToWidth(true);
+
         readyListView = new ListView<>();
         jobListView = new ListView<>();
         Button nextStepButton = new Button("Next Step");
@@ -53,7 +55,7 @@ public class MemoryManagementSimulator extends Application {
         updateJobListView();
         nextStepButton.setOnAction(e -> advanceSimulation());
 
-        VBox leftPane = new VBox(10, new Label("Memory View"), memoryView);
+        VBox leftPane = new VBox(10, new Label("Memory View"), scrollPane);
         VBox rightPane = new VBox(10, readyQueuePane, jobQueuePane);
 
         hbox.getChildren().addAll(leftPane, rightPane);
@@ -61,11 +63,10 @@ public class MemoryManagementSimulator extends Application {
 
         Scene scene = new Scene(root, 1000, 600);
         primaryStage.setScene(scene);
-        primaryStage.setMaximized(true); // Use maximized instead of full screen
+        primaryStage.setMaximized(true);
         primaryStage.show();
         allocateReadyQueue();
     }
-
 
     private void allocateReadyQueue() {
         for (PCB process : readyQueue) {
@@ -112,6 +113,13 @@ public class MemoryManagementSimulator extends Application {
 
     private void updateMemoryView() {
         memoryView.getChildren().clear();
+
+        // Add OS memory block representation
+        Rectangle osBlock = new Rectangle(20, 512 * 0.2);
+        osBlock.setFill(Color.DARKGRAY);
+        memoryView.getChildren().add(new Label("OS Block: Size=512"));
+        memoryView.getChildren().add(osBlock);
+
         List<MemoryManager.MemoryBlock> freeBlocks = memoryManager.getFreeBlocks();
         List<PCB> allocatedProcesses = memoryManager.getAllocatedProcesses();
 
@@ -133,5 +141,4 @@ public class MemoryManagementSimulator extends Application {
             memoryView.getChildren().add(rect);
         }
     }
-
 }
