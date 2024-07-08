@@ -61,10 +61,11 @@ public class MemoryManagementSimulator extends Application {
 
         Scene scene = new Scene(root, 1000, 600);
         primaryStage.setScene(scene);
-        primaryStage.setFullScreen(true);
+        primaryStage.setMaximized(true); // Use maximized instead of full screen
         primaryStage.show();
         allocateReadyQueue();
     }
+
 
     private void allocateReadyQueue() {
         for (PCB process : readyQueue) {
@@ -118,6 +119,7 @@ public class MemoryManagementSimulator extends Application {
         for (PCB process : allocatedProcesses) {
             Rectangle rect = new Rectangle(20, process.size * 0.2);
             rect.setFill(Color.LIGHTGREEN);
+            Tooltip.install(rect, new Tooltip("Process " + process.id + ": Base=" + process.base + ", Limit=" + process.limit));
             memoryView.getChildren().add(new Label("Process " + process.id + ": Base=" + process.base + ", Limit=" + process.limit));
             memoryView.getChildren().add(rect);
         }
@@ -126,8 +128,10 @@ public class MemoryManagementSimulator extends Application {
         for (MemoryManager.MemoryBlock block : freeBlocks) {
             Rectangle rect = new Rectangle(20, block.size * 0.2);
             rect.setFill(Color.LIGHTCORAL);
+            Tooltip.install(rect, new Tooltip("Free Block: Start=" + block.start + ", Size=" + block.size));
             memoryView.getChildren().add(new Label("Free Block: Start=" + block.start + ", Size=" + block.size));
             memoryView.getChildren().add(rect);
         }
     }
+
 }
